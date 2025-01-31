@@ -8,7 +8,7 @@
             UserName = userName;
             Password = password;
 
-            WalletUser = [];
+            WalletUser = [];            
         }
 
         public string FullName { get; private set; }

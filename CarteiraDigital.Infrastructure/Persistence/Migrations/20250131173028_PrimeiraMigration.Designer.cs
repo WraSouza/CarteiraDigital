@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CarteiraDigital.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(CarteiraDbContext))]
-    [Migration("20250129164243_PrimeiraMigration")]
+    [Migration("20250131173028_PrimeiraMigration")]
     partial class PrimeiraMigration
     {
         /// <inheritdoc />
@@ -24,6 +24,39 @@ namespace CarteiraDigital.Infrastructure.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("CarteiraDigital.Domain.Entities.Transfer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("IdFinalUser")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IdInitialUser")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IdInitialWallet")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IdWalletFinalUser")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdInitialWallet");
+
+                    b.ToTable("Transfers");
+                });
 
             modelBuilder.Entity("CarteiraDigital.Domain.Entities.User", b =>
                 {
@@ -77,6 +110,17 @@ namespace CarteiraDigital.Infrastructure.Persistence.Migrations
                     b.ToTable("Wallets");
                 });
 
+            modelBuilder.Entity("CarteiraDigital.Domain.Entities.Transfer", b =>
+                {
+                    b.HasOne("CarteiraDigital.Domain.Entities.Wallet", "Wallets")
+                        .WithMany("UserTransfers")
+                        .HasForeignKey("IdInitialWallet")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Wallets");
+                });
+
             modelBuilder.Entity("CarteiraDigital.Domain.Entities.Wallet", b =>
                 {
                     b.HasOne("CarteiraDigital.Domain.Entities.User", "User")
@@ -91,6 +135,11 @@ namespace CarteiraDigital.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("CarteiraDigital.Domain.Entities.User", b =>
                 {
                     b.Navigation("WalletUser");
+                });
+
+            modelBuilder.Entity("CarteiraDigital.Domain.Entities.Wallet", b =>
+                {
+                    b.Navigation("UserTransfers");
                 });
 #pragma warning restore 612, 618
         }

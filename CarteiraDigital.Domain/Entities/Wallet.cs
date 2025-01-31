@@ -18,12 +18,18 @@ namespace CarteiraDigital.Domain.Entities
         public int IdUser { get; private set; }
         public User User { get; private set; }
         public decimal Value { get; private set; }
+        public List<Transfer> UserTransfers { get; private set; }
+
 
         public void UpdateWallet(decimal value)
         {
 
            Value += value;
         }
-      
+
+        public void SubtractWallet(decimal value)
+        {
+            Value -= value;
+        }      
     }
 }

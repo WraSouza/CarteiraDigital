@@ -49,6 +49,35 @@ namespace CarteiraDigital.Infrastructure.Persistence.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Transfers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IdInitialWallet = table.Column<int>(type: "integer", nullable: false),
+                    IdInitialUser = table.Column<int>(type: "integer", nullable: false),
+                    IdWalletFinalUser = table.Column<int>(type: "integer", nullable: false),
+                    IdFinalUser = table.Column<int>(type: "integer", nullable: false),
+                    Value = table.Column<decimal>(type: "numeric", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transfers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Transfers_Wallets_IdInitialWallet",
+                        column: x => x.IdInitialWallet,
+                        principalTable: "Wallets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transfers_IdInitialWallet",
+                table: "Transfers",
+                column: "IdInitialWallet");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Wallets_IdUser",
                 table: "Wallets",
@@ -58,6 +87,9 @@ namespace CarteiraDigital.Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Transfers");
+
             migrationBuilder.DropTable(
                 name: "Wallets");
 

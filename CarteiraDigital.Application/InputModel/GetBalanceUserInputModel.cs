@@ -1,6 +1,6 @@
-﻿namespace CarteiraDigital.Application.Queries.InputModel
+﻿namespace CarteiraDigital.Application.InputModel
 {
-    public class GetBalanceUserInputModel
+    internal class GetBalanceUserInputModel
     {
         public GetBalanceUserInputModel(int idBalance, int idUser)
         {

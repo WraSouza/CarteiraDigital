@@ -28,6 +28,8 @@ builder.Services.AddScoped<Wallet>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+builder.Services.AddScoped<ITransferRepository, TransferRepository>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(typeof(AddUserCommand).Assembly); });

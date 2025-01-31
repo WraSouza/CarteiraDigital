@@ -13,6 +13,7 @@ namespace CarteiraDigital.Infrastructure.Persistence
 
         public DbSet<User> Users { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
+        public DbSet<Transfer> Transfers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -23,9 +24,10 @@ namespace CarteiraDigital.Infrastructure.Persistence
                 u.HasMany(u => u.WalletUser)
                           .WithOne(u => u.User)
                           .HasForeignKey(u => u.IdUser)
-                          .OnDelete(DeleteBehavior.Restrict);                         
-                
-                        
+                          .OnDelete(DeleteBehavior.Restrict);               
+              
+
+
             });
 
             builder
@@ -37,9 +39,24 @@ namespace CarteiraDigital.Infrastructure.Persistence
                              .WithMany(b => b.WalletUser)
                              .HasForeignKey(c => c.IdUser)
                              .OnDelete(DeleteBehavior.Restrict);
-
-
                 });
+
+            builder
+                .Entity<Transfer>(b =>
+                {
+                    b.HasKey(u => u.Id);
+
+                    b.HasOne(x => x.FromWallet)
+                            .WithMany(x => x.UserTransfers)
+                            .HasForeignKey(f => f.IdInitialWallet)
+                            .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne(x => x.ToWallet)
+                           .WithMany(x => x.UserTransfers)
+                           .HasForeignKey(f => f.IdFinalUser)
+                           .OnDelete(DeleteBehavior.Restrict);
+                });
+            
 
             base.OnModelCreating(builder);
         }

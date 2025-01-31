@@ -1,17 +1,14 @@
 ﻿using CarteiraDigital.Application.Commands.AddBalance;
 using CarteiraDigital.Application.Commands.UpdateWallet;
 using CarteiraDigital.Application.Queries.GetBalanceById;
-using CarteiraDigital.Application.Queries.InputModel;
 using CarteiraDigital.Infrastructure.Persistence;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarteiraDigital.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class WalletsController(IMediator mediator, CarteiraDbContext context) : ControllerBase
     {
         [HttpPost]
@@ -28,9 +25,9 @@ namespace CarteiraDigital.API.Controllers
         }
 
         [HttpPost("/consulta-saldo")]
-        public async Task<IActionResult> GetById(GetBalanceUserInputModel model)
+        public async Task<IActionResult> GetById([FromBody]GetBalanceByIdQuery model)
         {
-            var balanceUser = new GetBalanceByIdQuery(model.IdBalance, model.IdUser);
+            var balanceUser = new GetBalanceByIdQuery(model.Id, model.IdUser);
 
             var balance = await mediator.Send(balanceUser);
 
@@ -39,15 +36,15 @@ namespace CarteiraDigital.API.Controllers
 
         [HttpPut("/adicionar-saldo")]
         public async Task<IActionResult> Update(UpdateWalletCommand model)
-        { 
-            if(model.IdUser <=0 || model.IdWallet <= 0)
+        {
+            if (model.IdUser <= 0 || model.IdWallet <= 0)
             {
                 return BadRequest("Id Inválido. Valor Informado Deve Ser Maior que 0");
             }
 
             var id = await mediator.Send(model);
 
-            if(id == 0)
+            if (id == 0)
             {
                 return NotFound("Usuário Não Encontrado");
             }

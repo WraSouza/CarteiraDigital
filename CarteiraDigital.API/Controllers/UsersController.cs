@@ -1,6 +1,5 @@
 ﻿using CarteiraDigital.Application.Commands.AddUser;
 using CarteiraDigital.Application.Commands.Login;
-using CarteiraDigital.Application.InputModel;
 using CarteiraDigital.Application.Queries.GetAllUsers;
 using CarteiraDigital.Application.Queries.GetUserById;
 using CarteiraDigital.Infrastructure.Auth;
@@ -13,7 +12,6 @@ namespace CarteiraDigital.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UsersController(IMediator mediator, IMemoryCache cache, IAuthService authService) : ControllerBase
     {
         [HttpPost]
@@ -43,7 +41,7 @@ namespace CarteiraDigital.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 return BadRequest("Id Precisa Conter um Número Maior que 0");
             }
@@ -57,10 +55,10 @@ namespace CarteiraDigital.API.Controllers
 
         [HttpPut("/login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody]LoginCommand model)
+        public async Task<IActionResult> Login([FromBody] LoginCommand model)
         {
             var token = await mediator.Send(model);
-            
+
             return Ok(token);
         }
     }
